@@ -1,5 +1,10 @@
 # dsh-client-ui-thinking-stats
 
+![license](https://img.shields.io/badge/license-MIT-green)
+![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)
+[![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats)
+
+
 A **lightweight, client-only** DeepSeek Harness plugin that surfaces the
 model's **thinking tokens** — the reasoning part of its output. No host
 behavior, no extra services, no background polling: a small readout that reads
