@@ -1,6 +1,6 @@
 {
-  "name": "@YOUR_NPM_SCOPE/dsh-client-ui-thinking-stats",
-  "description": "Thinking (reasoning) token statistics for the DeepSeek Harness web GUI: a session-total readout in the bottom composer dock and a per-turn readout appended to each reply's timing row, each showing the thinking-token count, its share of all tokens, and its share of output tokens. Renders nothing when there is no thinking.",
+  "name": "@Six6stRINgs/dsh-client-ui-thinking-stats",
+  "description": "A lightweight, client-only DeepSeek Harness plugin that surfaces thinking (reasoning) tokens: a session-total readout in the composer dock and a per-turn readout on each reply's timing row, showing the count and its share of all and output tokens. Zero host behavior, self-contained, and renders nothing when there is no thinking.",
   "version": "1.0.0",
   "type": "module",
   "main": "lib/index.js",
@@ -44,15 +44,17 @@
     "lib/index.js",
     "lib/client.js",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "README.zh.md",
+    "assets"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_GITHUB/dsh-client-ui-thinking-stats.git"
+    "url": "git+https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats.git"
   },
-  "homepage": "https://github.com/YOUR_GITHUB/dsh-client-ui-thinking-stats#readme",
+  "homepage": "https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats#readme",
   "bugs": {
-    "url": "https://github.com/YOUR_GITHUB/dsh-client-ui-thinking-stats/issues"
+    "url": "https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats/issues"
   },
   "engines": {
     "node": ">=22.19.0"

@@ -92,8 +92,8 @@ function assert(cond, msg) {
   const txt = textOf(el);
   assert(el !== null && el.type === TooltipMock, "dock wraps readout in Tooltip");
   assert(txt.includes("500"), "dock thinking total 500, got: " + txt);
-  assert(txt.includes("17%"), "dock thinking/total 17% (500/2900), got: " + txt);
-  assert(txt.includes("56%"), "dock thinking/output 56% (500/900), got: " + txt);
+  assert(txt.includes("17.2%"), "dock thinking/total 17.2% (500/2900), got: " + txt);
+  assert(txt.includes("55.6%"), "dock thinking/output 55.6% (500/900), got: " + txt);
   assert(el.props.label.includes("Thinking tokens (session): 500"), "dock tooltip label, got: " + el.props.label);
 }
 // 2. dock block-estimate path: 400 chars / 4 = 100 thinking
@@ -142,6 +142,16 @@ function assert(cond, msg) {
   ]) }));
   const txt = textOf(el);
   assert(txt.includes("9.9K"), "formatTokens 9876 → 9.9K, got: " + txt);
+}
+// 9. small percentage keeps one decimal (regression: was "0%")
+{
+  // thinking 15 over total 8725 → 0.17% ; output 25 → 60.0%
+  const el = render(dockReg.component({ useSession: useSessionFor([
+    asst("s", { inputTokens: 8700, outputTokens: 25, reasoningTokens: 15 }, [], 0),
+  ]) }));
+  const txt = textOf(el);
+  assert(txt.includes("0.2%"), "small pct 15/8725 → 0.2% (not 0%), got: " + txt);
+  assert(txt.includes("60.0%"), "60% shown with one decimal, got: " + txt);
 }
 
 console.log(`All ${pass} assertions passed.`);

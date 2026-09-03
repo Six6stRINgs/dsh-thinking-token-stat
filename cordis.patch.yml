@@ -6,7 +6,7 @@
 #   id    - the plugin registration id in the profile.
 #   name  - the package name (matches "name" in package.json).
 #
-# Replace YOUR_NPM_SCOPE with your real npm scope before publishing.
+# If your npm scope differs, keep this in sync with "name" in package.json.
 - insert:
     - id: thinking-stats
-      name: "@YOUR_NPM_SCOPE/dsh-client-ui-thinking-stats"
+      name: "@Six6stRINgs/dsh-client-ui-thinking-stats"
