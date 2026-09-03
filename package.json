@@ -1,0 +1,65 @@
+{
+  "name": "@YOUR_NPM_SCOPE/dsh-client-ui-thinking-stats",
+  "description": "Thinking (reasoning) token statistics for the DeepSeek Harness web GUI: a session-total readout in the bottom composer dock and a per-turn readout appended to each reply's timing row, each showing the thinking-token count, its share of all tokens, and its share of output tokens. Renders nothing when there is no thinking.",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "thinking",
+    "reasoning",
+    "tokens",
+    "usage"
+  ],
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  },
+  "scripts": {
+    "check": "node --check lib/index.js && node --check lib/client.js",
+    "test": "node test/harness.mjs"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_GITHUB/dsh-client-ui-thinking-stats.git"
+  },
+  "homepage": "https://github.com/YOUR_GITHUB/dsh-client-ui-thinking-stats#readme",
+  "bugs": {
+    "url": "https://github.com/YOUR_GITHUB/dsh-client-ui-thinking-stats/issues"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-client-ui-conversation": "*",
+    "@deepseek-ai/dsh-client-ui-primitives": "*",
+    "react": "^18.2.0"
+  }
+}

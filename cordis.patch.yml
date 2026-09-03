@@ -1,0 +1,12 @@
+# dsh-client-ui-thinking-stats bundle patch.
+#
+# Applied by `dsh plugin add` when this plugin is installed: it inserts the
+# plugin entry into the active profile so the browser half is loaded.
+#
+#   id    - the plugin registration id in the profile.
+#   name  - the package name (matches "name" in package.json).
+#
+# Replace YOUR_NPM_SCOPE with your real npm scope before publishing.
+- insert:
+    - id: thinking-stats
+      name: "@YOUR_NPM_SCOPE/dsh-client-ui-thinking-stats"
