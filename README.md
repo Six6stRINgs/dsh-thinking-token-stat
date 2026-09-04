@@ -5,11 +5,10 @@
 [![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats)
 
 
-A **lightweight, client-only** DeepSeek Harness plugin that surfaces the
-model's **thinking tokens** — the reasoning part of its output. No host
-behavior, no extra services, no background polling: a small readout that reads
-the existing conversation snapshot and renders nothing at all when there is no
-thinking.
+A lightweight plugin that adds model thinking token statistics to the bottom
+Dock and the end of each conversation. Client-only and zero-cost when idle: it
+reads the existing conversation snapshot and renders nothing at all when there
+is no thinking.
 
 [Chinese version / 中文版](./README.zh.md)
 

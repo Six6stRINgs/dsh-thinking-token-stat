@@ -1,8 +1,7 @@
 # dsh-client-ui-thinking-stats
 
-一个**轻量、纯前端**的 DeepSeek Harness 插件，用来展示模型的
-**thinking（推理）token** —— 即模型输出中的思考部分。没有宿主行为、不引入额外
-服务、不做后台轮询：它只读取现有的会话快照，并在没有思考时**完全不渲染**。
+在底部 Dock 和每次对话结尾添加模型思考 token 统计的轻量化插件。纯前端、空闲零
+成本：只读取现有的会话快照，没有思考时**完全不渲染**。
 
 [English version](./README.md)
 
