@@ -77,8 +77,8 @@ const nodesBlocks = [
 const nodesNone = [
   asst("m4", { inputTokens: 1000, outputTokens: 400 }, [{ kind: "text", text: "hello" }], 0),
 ];
-const snapshot = (nodes) => ({ chat: { legacy: { nodes } } });
-function useSessionFor(nodes) { return (selector) => selector(snapshot(nodes)); }
+const snapshot = (nodes) => ({ legacy: { nodes } });
+function useChatFor(nodes) { return (selector) => selector(snapshot(nodes)); }
 
 let pass = 0;
 function assert(cond, msg) {
@@ -88,7 +88,7 @@ function assert(cond, msg) {
 
 // 1. dock renders session totals (provider-reported path) + uses Tooltip
 {
-  const el = render(dockReg.component({ useSession: useSessionFor(nodesProvider) }));
+  const el = render(dockReg.component({ useChat: useChatFor(nodesProvider) }));
   const txt = textOf(el);
   assert(el !== null && el.type === TooltipMock, "dock wraps readout in Tooltip");
   assert(txt.includes("500"), "dock thinking total 500, got: " + txt);
@@ -98,18 +98,18 @@ function assert(cond, msg) {
 }
 // 2. dock block-estimate path: 400 chars / 4 = 100 thinking
 {
-  const el = render(dockReg.component({ useSession: useSessionFor(nodesBlocks) }));
+  const el = render(dockReg.component({ useChat: useChatFor(nodesBlocks) }));
   const txt = textOf(el);
   assert(txt.includes("100"), "dock block-estimate 100, got: " + txt);
 }
 // 3. dock hidden when no thinking
 {
-  const el = render(dockReg.component({ useSession: useSessionFor(nodesNone) }));
+  const el = render(dockReg.component({ useChat: useChatFor(nodesNone) }));
   assert(el === null, "dock renders null when no thinking");
 }
 // 4. per-turn (assistant-actions) via messageId → aggregates its turn
 {
-  const el = render(turnReg.component({ messageId: "m1", useSession: useSessionFor(nodesProvider) }));
+  const el = render(turnReg.component({ messageId: "m1", useChat: useChatFor(nodesProvider) }));
   const txt = textOf(el);
   assert(el !== null && el.type === TooltipMock, "per-turn wraps readout in Tooltip");
   assert(txt.includes("300"), "per-turn thinking 300 for m1, got: " + txt);
@@ -121,23 +121,23 @@ function assert(cond, msg) {
     asst("a1", { inputTokens: 1000, outputTokens: 500, reasoningTokens: 300 }, [], 0),
     asst("a2", { inputTokens: 1000, outputTokens: 500, reasoningTokens: 300 }, [], 0),
   ];
-  const el = render(turnReg.component({ messageId: "a1", useSession: useSessionFor(two) }));
+  const el = render(turnReg.component({ messageId: "a1", useChat: useChatFor(two) }));
   const txt = textOf(el);
   assert(txt.includes("600"), "per-turn sums both steps in turn → 600, got: " + txt);
 }
 // 6. per-turn hidden when that turn has no thinking
 {
-  const el = render(turnReg.component({ messageId: "m4", useSession: useSessionFor(nodesNone) }));
+  const el = render(turnReg.component({ messageId: "m4", useChat: useChatFor(nodesNone) }));
   assert(el === null, "per-turn renders null when that turn has no thinking");
 }
 // 7. per-turn hidden when messageId unknown
 {
-  const el = render(turnReg.component({ messageId: "nope", useSession: useSessionFor(nodesProvider) }));
+  const el = render(turnReg.component({ messageId: "nope", useChat: useChatFor(nodesProvider) }));
   assert(el === null, "per-turn renders null for unknown messageId");
 }
 // 8. formatting sanity
 {
-  const el = render(dockReg.component({ useSession: useSessionFor([
+  const el = render(dockReg.component({ useChat: useChatFor([
     asst("big", { inputTokens: 10000, outputTokens: 12000, reasoningTokens: 9876 }, [], 0),
   ]) }));
   const txt = textOf(el);
@@ -146,7 +146,7 @@ function assert(cond, msg) {
 // 9. small percentage keeps one decimal (regression: was "0%")
 {
   // thinking 15 over total 8725 → 0.17% ; output 25 → 60.0%
-  const el = render(dockReg.component({ useSession: useSessionFor([
+  const el = render(dockReg.component({ useChat: useChatFor([
     asst("s", { inputTokens: 8700, outputTokens: 25, reasoningTokens: 15 }, [], 0),
   ]) }));
   const txt = textOf(el);
