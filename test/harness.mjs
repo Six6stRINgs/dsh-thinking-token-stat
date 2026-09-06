@@ -111,9 +111,10 @@ function assert(cond, msg) {
 {
   const el = render(turnReg.component({ messageId: "m1", useChat: useChatFor(nodesProvider) }));
   const txt = textOf(el);
-  assert(el !== null && el.type === TooltipMock, "per-turn wraps readout in Tooltip");
+  assert(el !== null && el.props.className === "dsh-ttail-wrap", "per-turn renders the native detail-panel wrapper");
   assert(txt.includes("300"), "per-turn thinking 300 for m1, got: " + txt);
-  assert(el.props.label.includes("this turn"), "per-turn tooltip label scope, got: " + el.props.label);
+  assert(txt.includes("Thinking tokens this turn"), "per-turn detail panel title, got: " + txt);
+  assert(txt.includes("Thinking / all tokens"), "per-turn all-token detail, got: " + txt);
 }
 // 5. per-turn aggregates the whole turn (two steps same turn)
 {
