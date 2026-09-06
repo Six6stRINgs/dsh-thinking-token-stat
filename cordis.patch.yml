@@ -1,4 +1,4 @@
-# dsh-client-ui-thinking-stats bundle patch.
+# dsh-thinking-token-stat bundle patch.
 #
 # Applied by `dsh plugin add` when this plugin is installed: it inserts the
 # plugin entry into the active profile so the browser half is loaded.

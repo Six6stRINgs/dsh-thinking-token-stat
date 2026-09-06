@@ -1,7 +1,11 @@
-# dsh-client-ui-thinking-stats
+# dsh-thinking-token-stat
 
-在底部 Dock 和每次对话结尾添加模型思考 token 统计的轻量化插件。纯前端、空闲零
-成本：只读取现有的会话快照，没有思考时**完全不渲染**。
+在底部 Dock 和每次对话结尾添加模型 thinking token 统计的轻量化插件。纯前端、空闲零
+成本：只读取现有的会话快照，没有可用的思考数据时**完全不渲染**。
+
+统计结果取决于模型和 provider。部分模型不会向客户端提供 reasoning token 或 reasoning
+文本；对于这类回复，插件没有可统计的 thinking 数据，因此不会显示读数。这是正常行为，
+并不表示插件出错。
 
 [English version](./README.md)
 
@@ -57,7 +61,7 @@
 直接从本仓库安装：
 
 ```sh
-dsh plugin add github:Six6stRINgs/dsh-client-ui-thinking-stats
+dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
 ```
 
 然后重启 `dsh web` 并刷新页面。模型开始思考后读数就会出现。

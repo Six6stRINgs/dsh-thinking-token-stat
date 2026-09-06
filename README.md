@@ -1,14 +1,18 @@
-# dsh-client-ui-thinking-stats
+# dsh-thinking-token-stat
 
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)
-[![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats)
+[![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
 
 
-A lightweight plugin that adds model thinking token statistics to the bottom
+A lightweight plugin that adds model thinking-token statistics to the bottom
 Dock and the end of each conversation. Client-only and zero-cost when idle: it
 reads the existing conversation snapshot and renders nothing at all when there
-is no thinking.
+is no reported or visible thinking output.
+
+Thinking statistics depend on the model and provider. Some models do not expose
+reasoning tokens or reasoning text to the client; for those replies, the plugin
+has no thinking data to count and the readout is intentionally not shown.
 
 [Chinese version / 中文版](./README.zh.md)
 
@@ -73,7 +77,7 @@ The plugin follows the standard `dsh.bundle` + `dsh.client` convention, so it
 installs like any DSH plugin. From this repository:
 
 ```sh
-dsh plugin add github:Six6stRINgs/dsh-client-ui-thinking-stats
+dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
 ```
 
 Then restart `dsh web` and reload the page. The readouts appear only once the

@@ -1,7 +1,7 @@
 {
   "name": "dsh-thinking-token-stat",
   "description": "A lightweight plugin that adds model thinking token statistics to the bottom Dock and the end of each conversation.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "main": "lib/index.js",
   "license": "MIT",
@@ -32,11 +32,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats.git"
+    "url": "git+https://github.com/Six6stRINgs/dsh-thinking-token-stat.git"
   },
-  "homepage": "https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats#readme",
+  "homepage": "https://github.com/Six6stRINgs/dsh-thinking-token-stat#readme",
   "bugs": {
-    "url": "https://github.com/Six6stRINgs/dsh-client-ui-thinking-stats/issues"
+    "url": "https://github.com/Six6stRINgs/dsh-thinking-token-stat/issues"
   },
   "engines": {
     "node": ">=22.19.0"
