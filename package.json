@@ -1,5 +1,5 @@
 {
-  "name": "@Six6stRINgs/dsh-client-ui-thinking-stats",
+  "name": "@six6strings/dsh-client-ui-thinking-stats",
   "description": "A lightweight plugin that adds model thinking token statistics to the bottom Dock and the end of each conversation.",
   "version": "1.0.2",
   "type": "module",
