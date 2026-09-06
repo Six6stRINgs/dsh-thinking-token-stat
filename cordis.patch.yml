@@ -9,4 +9,4 @@
 # If your npm scope differs, keep this in sync with "name" in package.json.
 - insert:
     - id: thinking-stats
-      name: "@six6strings/dsh-client-ui-thinking-stats"
+      name: "dsh-client-ui-thinking-stats"
