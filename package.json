@@ -1,7 +1,7 @@
 {
   "name": "dsh-thinking-token-stat",
   "description": "A lightweight plugin that adds model thinking token statistics to the bottom Dock and the end of each conversation.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "main": "lib/index.js",
   "license": "MIT",
