@@ -22,6 +22,9 @@ function textOf(el) {
 const react = {
   memo: (c) => c,
   useMemo: (fn) => fn(),
+  useState: (initial) => [true, () => {}],
+  useRef: (initial) => ({ current: initial }),
+  useEffect: () => {},
   createElement: (type, props, ...children) => ({ type, props: props || {}, children }),
 };
 // Tooltip mock: expose the label so tests can assert on it.
@@ -29,13 +32,22 @@ const TooltipMock = (props) => ({ type: "Tooltip", props });
 
 const requireMock = {
   react,
-  "@deepseek-ai/dsh-client-ui-primitives": { Tooltip: TooltipMock },
+  "react-dom": { createPortal: (node) => node },
+  "@deepseek-ai/dsh-client-ui-primitives": {
+    Tooltip: TooltipMock,
+    useAnchoredPosition: () => null,
+    useDismissOnOutsidePointer: () => {},
+  },
 };
 
 // ── stub the AMD loader + require, run the factory ─────────────────────
 let captured = null;
 const fakeWindow = { __ModuleLoader__: { load: (obj) => { captured = obj; } } };
 const documentStub = {
+  documentElement: { lang: process.env.DSH_TEST_LANG || "en" },
+  body: {},
+  addEventListener: () => {},
+  removeEventListener: () => {},
   querySelector: () => null,
   createElement: () => ({ setAttribute: () => {}, textContent: "" }),
   head: { appendChild: () => {} },
@@ -94,7 +106,8 @@ function assert(cond, msg) {
   assert(txt.includes("500"), "dock thinking total 500, got: " + txt);
   assert(txt.includes("17.2%"), "dock thinking/total 17.2% (500/2900), got: " + txt);
   assert(txt.includes("55.6%"), "dock thinking/output 55.6% (500/900), got: " + txt);
-  assert(el.props.label.includes("Thinking tokens (session): 500"), "dock tooltip label, got: " + el.props.label);
+  const expectedSessionLabel = process.env.DSH_TEST_LANG === "zh-CN" ? "本次会话思考 token: 500" : "Thinking tokens (session): 500";
+  assert(el.props.label.includes(expectedSessionLabel), "dock tooltip label, got: " + el.props.label);
 }
 // 2. dock block-estimate path: 400 chars / 4 = 100 thinking
 {
@@ -113,8 +126,10 @@ function assert(cond, msg) {
   const txt = textOf(el);
   assert(el !== null && el.props.className === "dsh-ttail-wrap", "per-turn renders the native detail-panel wrapper");
   assert(txt.includes("300"), "per-turn thinking 300 for m1, got: " + txt);
-  assert(txt.includes("Thinking tokens this turn"), "per-turn detail panel title, got: " + txt);
-  assert(txt.includes("Thinking / all tokens"), "per-turn all-token detail, got: " + txt);
+  const expectedTurnTitle = process.env.DSH_TEST_LANG === "zh-CN" ? "本轮思考 token" : "Thinking tokens this turn";
+  const expectedAllLabel = process.env.DSH_TEST_LANG === "zh-CN" ? "思考 / 全部 token" : "Thinking / all tokens";
+  assert(txt.includes(expectedTurnTitle), "per-turn detail panel title, got: " + txt);
+  assert(txt.includes(expectedAllLabel), "per-turn all-token detail, got: " + txt);
 }
 // 5. per-turn aggregates the whole turn (two steps same turn)
 {
