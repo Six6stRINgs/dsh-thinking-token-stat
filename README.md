@@ -30,19 +30,14 @@ no thinking** for the relevant scope:
 | Bottom composer dock | `conversation.composer.dock` | Whole session (cumulative) |
 | Each assistant reply (timing row) | `conversation.chat.assistant-actions` | That single turn |
 
-The per-turn readout is appended to the reply's timing strip — the same hover
-row that shows `20:55 · 用时 11秒 · 首token 10秒 · 28 tok/s` — so it reads as part
-of that same unit.
+The per-turn readout is appended to the reply's timing strip, alongside the
+built-in usage and timing pills, so it reads as part of that same unit. Click the
+thinking pill to open a native-style details panel. The panel follows the active
+DSH locale.
 
-Each readout shows, left to right, a **brain glyph**, the thinking-token count,
-its **share of all tokens**, and its **share of output tokens**, each with one
-decimal place, for example:
-
-```
-💭 15 · 0.2% · 60.0%
-```
-
-Hover for the exact numbers.
+The details panel shows the thinking-token count, the all-token denominator and
+percentage, and the output-token denominator and percentage. Percentages use one
+decimal place; counts use compact units such as `K` and `M` when appropriate.
 
 ## How thinking tokens are counted
 
@@ -78,13 +73,22 @@ percentages always agree with the count on one consistent scope:
 ## Install
 
 The plugin follows the standard `dsh.bundle` + `dsh.client` convention, so it
-installs like any DSH plugin. From this repository:
+installs like any DSH plugin.
+
+From GitHub:
 
 ```sh
 dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
 ```
 
-Then restart `dsh web` and reload the page. The readouts appear only once the
+Or install the published npm package:
+
+```sh
+npm install dsh-thinking-token-stat
+```
+
+After installing, make sure the package is included in your DSH profile bundles,
+then restart `dsh web` and reload the page. The readouts appear only once the
 model starts thinking.
 
 ## Testing

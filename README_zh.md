@@ -29,18 +29,12 @@
 | 底部 composer dock | `conversation.composer.dock` | 整个会话（累计） |
 | 每条助手回复（计时行） | `conversation.chat.assistant-actions` | 单轮 |
 
-单轮读数会被追加到该回复的计时条后面 —— 就是显示
-`20:55 · 用时 11秒 · 首token 10秒 · 28 tok/s` 的那个悬停行 —— 从而看起来像是
-同一部件的一部分。
+单轮读数会被追加到该回复的计时条后面，与内置的用量和计时 pill 保持一致，
+看起来像是同一部件的一部分。点击 thinking pill 后，会打开与 DSH 原生 UI 风格一致的
+详情面板。面板会显示 thinking token 总量、全部 token 分母及比例、输出 token 分母及
+比例，并跟随当前 DSH 语言切换。
 
-每个读数从左到右依次显示一个**大脑图标**、thinking-token 数量、
-**占全部 token 的比例**，以及**占输出 token 的比例**（均保留一位小数），例如：
-
-```
-💭 15 · 0.2% · 60.0%
-```
-
-悬停可看到精确数值。
+百分比保留一位小数；token 数量会根据大小使用紧凑单位，例如 `K` 和 `M`。
 
 ## thinking token 如何统计
 
@@ -69,13 +63,21 @@
 ## 安装
 
 插件遵循标准的 `dsh.bundle` + `dsh.client` 约定，安装方式与其他 DSH 插件一致。
-直接从本仓库安装：
+
+从 GitHub 安装：
 
 ```sh
 dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
 ```
 
-然后重启 `dsh web` 并刷新页面。模型开始思考后读数就会出现。
+或者通过 npm 安装已发布的包：
+
+```sh
+npm install dsh-thinking-token-stat
+```
+
+通过 npm 安装后，请确保将该包加入 DSH profile 的 bundles，然后重启 `dsh web`
+并刷新页面。模型开始思考后读数就会出现。
 
 ## 测试
 
