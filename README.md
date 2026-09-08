@@ -1,8 +1,14 @@
 # dsh-thinking-token-stat
 
-![license](https://img.shields.io/badge/license-MIT-green)
-![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)
+> **English** | [中文](./README.zh.md)
+
+[![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+[![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)](https://github.com/deepseek-ai/deepseek-harness)
+[![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
+[![npm downloads](https://img.shields.io/npm/dt/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
 [![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
+[![GitHub stars](https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7)](https://github.com/Six6stRINgs/dsh-thinking-token-stat/)
 
 
 A lightweight plugin that adds model thinking-token statistics to the bottom
@@ -13,8 +19,6 @@ is no reported or visible thinking output.
 Thinking statistics depend on the model and provider. Some models do not expose
 reasoning tokens or reasoning text to the client; for those replies, the plugin
 has no thinking data to count and the readout is intentionally not shown.
-
-[Chinese version / 中文版](./README.zh.md)
 
 ![thinking-token statistics](./assets/screenshot.png)
 
