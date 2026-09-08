@@ -1,5 +1,16 @@
 # dsh-thinking-token-stat
 
+> [English](./README.md) | **中文**
+
+[![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+[![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)](https://github.com/deepseek-ai/deepseek-harness)
+[![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
+[![npm downloads](https://img.shields.io/npm/dt/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
+[![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
+[![GitHub stars](https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7)](https://github.com/Six6stRINgs/dsh-thinking-token-stat/)
+
+
 在底部 Dock 和每次对话结尾添加模型 thinking token 统计的轻量化插件。纯前端、空闲零
 成本：只读取现有的会话快照，没有可用的思考数据时**完全不渲染**。
 
