@@ -1,6 +1,6 @@
 # dsh-thinking-token-stat
 
-> **English** | [中文](./README.zh.md)
+> **English** | [中文](./README_zh.md)
 
 [![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
 [![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)](https://github.com/deepseek-ai/deepseek-harness)
