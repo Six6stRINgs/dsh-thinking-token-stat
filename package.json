@@ -1,7 +1,7 @@
 {
   "name": "dsh-thinking-token-stat",
-  "description": "A lightweight plugin that adds model thinking token statistics to the bottom Dock and the end of each conversation.",
-  "version": "1.0.8",
+  "description": "Per-turn thinking-token statistics for DeepSeek Harness, folded once by a durable session projection and read by the composer dock.",
+  "version": "1.1.0",
   "type": "module",
   "main": "lib/index.js",
   "license": "MIT",
@@ -15,6 +15,9 @@
     "./package.json": "./package.json"
   },
   "dsh": {
+    "engines": {
+      "dsh": ">=0.1.5-rc.1"
+    },
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
@@ -28,7 +31,7 @@
   },
   "scripts": {
     "check": "node --check lib/index.js && node --check lib/client.js",
-    "test": "node test/harness.mjs"
+    "test": "node test/projection.mjs && node test/harness.mjs"
   },
   "repository": {
     "type": "git",
@@ -46,7 +49,24 @@
     "@deepseek-ai/dsh-client-ui-primitives": "*",
     "react": "^18.2.0"
   },
-  "dependencies": {
-    "dsh-thinking-token-stat": "1.0.7"
-  }
+  "files": [
+    "lib",
+    "assets",
+    "cordis.patch.yml",
+    "screenshots.json",
+    "README.md",
+    "README_zh.md",
+    "CHANGELOG.md",
+    "CHANGELOG_zh.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "client-plugin",
+    "thinking",
+    "reasoning-tokens",
+    "statistics"
+  ]
 }
