@@ -117,7 +117,9 @@ only the page in view exists in the page: `Newer / Older` and `page 2 of 5` move
 between them.
 
 Every row ends with a jump button that takes you to that turn's reply in the
-conversation. It does nothing for a turn the conversation view no longer holds.
+conversation. A paged conversation only renders the turns it has loaded, so for a turn
+behind that window the button asks DSH to page history back to it first — the same call
+the official turn rail makes — and then lands on the reply.
 
 **The details close from anywhere.** Clicking another control in the composer, or
 anywhere outside, closes the overview and the table alike, as does `Escape` — the same
@@ -137,9 +139,11 @@ That is the whole design, and it is what makes the numbers trustworthy:
   event, checkpointed with the session, and refolded only over the events that arrived
   since — so the figures are whole-session by construction, on a conversation of any
   length, and identical after a reload.
-- **Nothing is loaded, ever.** The plugin never reads a message back into the
-  conversation, and never asks DSH to. There is no "load more" because there is nothing
-  to load: the host already folded it.
+- **The figures are never loaded or paged.** The plugin never reads a message back into
+  the conversation to count it. There is no "load more" for the numbers, because there is
+  nothing to load: the host already folded them. The one exception is the jump button,
+  which may ask DSH to page history to a turn you explicitly jumped to — a read, on
+  click, of a turn you asked to see.
 - **Nothing is cached by the browser.** There is no `localStorage`, no ledger, and no
   per-session browser state. The projection's checkpoint is the persistence, and it
   belongs to the session, not to this plugin.
@@ -161,13 +165,13 @@ follows length, not content:
 | Turns | Persisted state | Published to the browser |
 | --- | --- | --- |
 | 88 (a real session measured here) | 3.0 KB | 2.4 KB |
-| 1 000 | ≈ 35 KB | capped at the newest 200 rows |
-| 5 000 (the state's own cap) | ≈ 175 KB | capped at the newest 200 rows |
+| 1 000 | ≈ 35 KB | capped at the newest 500 rows |
+| 5 000 (the state's own cap) | ≈ 175 KB | capped at the newest 500 rows |
 
 For comparison, DSH's own `turnOutline` unit keeps a larger per-turn record for the same
 session, and its `contextBreakdown` state is 54 KB. The published view is deliberately
-bounded: a client-visible projection value rides every snapshot frame, so the per-turn
-rows are capped at the newest 200 while the totals stay whole-session. Past that, the
+bounded: the host re-sends the whole value on every change, so the per-turn rows are
+capped at the newest 500 (≈15 KB) while the totals stay whole-session. Past that, the
 overview says so in one line.
 
 ### Where the model column comes from
@@ -236,8 +240,9 @@ arrived at.
   worked out from the thinking text is an estimate, and the details label it as one;
 - count a window instead of a session. The figures are the session's, so paging and
   compaction cannot change them;
-- read your history behind your back, or load it in front of you. The host folds the log
-  it already has; the browser never reads or requests a message;
+- read your history behind your back. The host folds the log it already has; the browser
+  never reads a message to count one. The only thing it can ask the host to load is the
+  turn you explicitly jumped to;
 - write anything into your browser. There is no local storage and no per-plugin state.
 
 ## Lightweight by design
@@ -246,12 +251,13 @@ arrived at.
 - **Folded once, by the host.** One reducer over one event type, six numbers per turn,
   0.6 µs per event on a real session — and every other event costs a single reference
   comparison.
-- **Nothing is loaded, paged, or cached.** The browser half reads one projection value;
-  it holds no session binding, opens no conversation, and stores nothing.
+- **Nothing is loaded, paged, or cached.** The figures come from one projection value;
+  the browser half holds no session binding, opens no conversation, and stores nothing.
+  A jump may page history to the turn you asked for, once, on click.
 - **Read-only.** No background service, no extra requests, no network access.
 - **Nothing to configure.** No settings, no accounts, no data collection.
 - **Invisible when idle.** A conversation with no thinking shows nothing at all.
-- **Bounded.** The state keeps 5 000 rows (≈175 KB) and the published view 200 rows, and
+- **Bounded.** The state keeps 5 000 rows (≈175 KB) and the published view 500 rows, and
   the table renders one page of 100 at a time.
 - **Follows your theme**, light or dark.
 - **Follows your language.** The plugin is written in the two languages DSH ships,

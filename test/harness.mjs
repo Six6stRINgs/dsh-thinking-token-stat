@@ -85,13 +85,17 @@ new Function("window", "document", "require", SRC)(fakeWindow, documentStub, (sp
 if (!captured || !captured.factory) throw new Error("factory not captured");
 const mod = captured.factory((spec) => requireMock[spec]);
 
-if (JSON.stringify(mod.inject) !== JSON.stringify(["slots"])) {
-  throw new Error("the client half must depend only on the slot service, got " + JSON.stringify(mod.inject));
+if (JSON.stringify(mod.inject) !== JSON.stringify(["slots", "sessions"])) {
+  throw new Error("the client half must depend on exactly the slot and session services, got " + JSON.stringify(mod.inject));
 }
 
 // ── stub ctx.slots, run apply, capture registrations ───────────────────
 const registrations = [];
+// The plugin captures the session service at apply time (as the real service injection
+// would deliver it); tests fill in `binding` on this one object.
+const sessionService = {};
 const ctx = {
+  sessions: sessionService,
   slots: {
     inject: (name, cb) => { cb(); },
     register: (opts, component) => { registrations.push({ opts, component }); },
@@ -104,6 +108,9 @@ if (!dockReg) throw new Error("composer.dock not registered");
 if (registrations.length !== 1) {
   throw new Error("the plugin must own exactly one readout surface, got " + registrations.length);
 }
+if (typeof dockReg.opts.inject !== "function" || dockReg.opts.inject("sess-1").sessionId !== "sess-1") {
+  throw new Error("the registration must ask the slot scope for its session id");
+}
 
 // ── element tree helpers ───────────────────────────────────────────────
 function render(node) {
@@ -111,8 +118,12 @@ function render(node) {
   if (node === false || node === true) return node;
   if (Array.isArray(node)) return node.map(render).filter(Boolean);
   if (typeof node === "string" || typeof node === "number") return String(node);
+  // A function element is a component: React would call it and render the result. The
+  // plugin registers one wrapper around the dock (to hand it the session service), so the
+  // tree has to go through that call to reach the dock at all.
+  if (typeof node.type === "function") return render(node.type(node.props));
   const { type, props, children } = node;
-  const kids = render(children).filter(Boolean);
+  const kids = (children === undefined ? [] : render(children)).filter(Boolean);
   const el = { type, props, kids };
   // React attaches refs at commit; the harness attaches them as it builds the tree. That
   // is faithful enough for the effects under test, which read the previous commit's
@@ -178,25 +189,29 @@ function flatten(children) {
  * updates.
  * @param projections - projection key → value, as the host would serve them.
  * @param view - `summary` (the pill) or `turns` (the chevron list).
+ * @param entry - the props the slot scope injects on top of the standard kit.
  * @returns the committed element tree.
  */
-function mount(projections, view) {
+let lastEntry = {};
+function mount(projections, view, entry) {
   resetCells();
   seedView = view === undefined ? "summary" : view;
-  const props = { useProjection: (key) => projections[key] };
-  render(dockReg.component(props));
+  lastEntry = entry === undefined ? {} : entry;
+  const props = () => Object.assign({ useProjection: (key) => projections[key] }, lastEntry);
+  render(dockReg.component(props()));
   cursor = 0;
-  return render(dockReg.component(props));
+  return render(dockReg.component(props()));
 }
 /** Re-render the tree `mount()` built, as React would after a state update. */
 let lastProjections = null;
-function mountTracked(projections, view) {
+function mountTracked(projections, view, entry) {
   lastProjections = projections;
-  return mount(projections, view);
+  return mount(projections, view, entry);
 }
 function rerender() {
   cursor = 0;
-  return render(dockReg.component({ useProjection: (key) => lastProjections[key] }));
+  const props = Object.assign({ useProjection: (key) => lastProjections[key] }, lastEntry);
+  return render(dockReg.component(props));
 }
 
 const panelOf = (el) => (el === null || !Array.isArray(el.kids) ? null : el.kids.find((kid) => kid !== undefined && kid.props !== undefined && kid.props.className === "dsh-tstat-panel") || null);
@@ -657,6 +672,52 @@ const L = {
   assert(jump !== undefined && jump.type === "button", "the row offers a jump control");
   assert(typeof jump.props.onClick === "function", "which is clickable");
   assert(jump.props.onClick() === undefined, "and does nothing when the turn is not in the document");
+}
+
+// 12b. a jump behind the loaded window pages history back to the turn, then lands
+{
+  const savedQuery = documentStub.querySelector;
+  const scrolled = [];
+  const loadCalls = [];
+  let turnLoaded = false;
+  const turnEl = { getClientRects: () => [{}], scrollIntoView: (options) => scrolled.push(options) };
+  documentStub.querySelector = (selector) => {
+    const owned = savedQuery.call(documentStub, selector);
+    if (owned !== null) return owned;
+    if (turnLoaded && selector === '[data-turn-process="3"]') return turnEl;
+    return null;
+  };
+  sessionService.binding = (id) => ({
+    session: {
+      loadThrough: (seq) => {
+        loadCalls.push([id, seq]);
+        // The prepended page commits before the loader's promise resolves — which is
+        // what the reveal's retries are for in a real commit.
+        turnLoaded = true;
+        return Promise.resolve();
+      }
+    }
+  });
+  try {
+    const outline = [{ turn: 3, seq: 42, prompt: "p", response: "r" }];
+    const el = mountTracked(PROJECTIONS(viewOf([reportedRow(3, 300, 500, 0)], ["a/one"]), { turnOutline: outline }), "turns", { sessionId: "sess-1" });
+    cellOf(turnRowsOf(el)[0], "dsh-tstat-jump").props.onClick();
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    assert(loadCalls.length === 1 && loadCalls[0][0] === "sess-1" && loadCalls[0][1] === 42,
+      "the jump paged history through the turn's own seq, got: " + JSON.stringify(loadCalls));
+    assert(scrolled.length === 1 && scrolled[0].block === "center",
+      "and landed on the turn once the window held it, got: " + JSON.stringify(scrolled));
+    // A turn the outline does not name cannot be loaded, and the jump must not pretend.
+    scrolled.length = 0;
+    loadCalls.length = 0;
+    const noEntry = mountTracked(PROJECTIONS(viewOf([reportedRow(7, 300, 500, 0)], ["a/one"]), { turnOutline: outline }), "turns", { sessionId: "sess-1" });
+    cellOf(turnRowsOf(noEntry)[0], "dsh-tstat-jump").props.onClick();
+    await new Promise((resolve) => setTimeout(resolve, 40));
+    assert(loadCalls.length === 0 && scrolled.length === 0, "a turn the outline does not name stays a no-op");
+  } finally {
+    documentStub.querySelector = savedQuery;
+    delete sessionService.binding;
+  }
 }
 
 // 13. a long table is paged, and only the page in view is rendered

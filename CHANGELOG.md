@@ -3,6 +3,26 @@
 One line per released version. Versions before 1.0.2 were development-only and
 were never published to npm.
 
+## 1.1.1 — 2026-09-13
+
+Adapted to the 0.2.0 desktop, and the per-turn jump now reaches turns the conversation
+has not loaded.
+
+- **The jump button works for turns behind the loaded window.** A paged conversation
+  renders only the turns it holds, so the jump used to die silently on exactly the turns
+  a long table offers. It now reads the turn's own sequence number from the official
+  `turnOutline` projection, asks the session service to page history back to it — the
+  same call the shipped turn rail makes for its unloaded marks — and lands once the reply
+  is on screen. On a host that serves neither piece, the jump keeps working for turns
+  already rendered and stays honest about the rest.
+- **The published view keeps the newest 500 turns**, up from 200 — five pages of detail
+  instead of two. The view is still bounded, because the host re-sends the whole value on
+  every change: 500 rows are ≈15 KB, about 30 KB of traffic a turn.
+- Verified against the 0.2.0 desktop: the composer stats row, the per-turn markers the
+  jump reads, the anchoring hook and the theme variables are all unchanged there. The
+  engine requirement is now `dsh >= 0.2.0-rc.2`, because the loader needs the session
+  service.
+
 ## 1.1.0 — 2026-09-13
 
 Rebuilt on a session projection of this plugin's own, with the wording and the scope of

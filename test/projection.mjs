@@ -203,6 +203,18 @@ function fold(events, inheritedEventCount) {
   assert(view.turns[0][0] === 25, "the published window starts at the oldest published turn, got " + view.turns[0][0]);
   assert(view.totals.thinking === (VIEW_TURNS + 25) * 5, "the total covers all of them, got " + view.totals.thinking);
   assert(viewSchema.parse(view) !== undefined, "the bounded view still satisfies its schema");
+  // The gate and the constant agree in both directions: the window's size is exactly
+  // what the schema accepts, one row more is a value this plugin never publishes.
+  const exact = { ...view, turns: Array.from({ length: VIEW_TURNS }, (unused, index) => [index, 1, 1, 0, 2, []]) };
+  assert(viewSchema.parse(exact) !== undefined, "a view of exactly the window size parses");
+  const over = { ...view, turns: exact.turns.concat([[VIEW_TURNS, 1, 1, 0, 2, [0]]]) };
+  let threw = false;
+  try {
+    viewSchema.parse(over);
+  } catch (error) {
+    threw = true;
+  }
+  assert(threw, "a view one row past the window is refused");
 }
 
 // 10. the state is bounded too, and keeps counting what it no longer lists
