@@ -3,6 +3,14 @@
 One line per released version. Versions before 1.0.2 were development-only and
 were never published to npm.
 
+## 1.1.2 — 2026-09-29
+
+- The engine requirement is `dsh >= 0.1.7-rc.2`, not `>= 0.2.0-rc.2` as 1.1.1 declared:
+  npm's latest `dsh` is the 0.1.7 line, the desktop vendors 0.2.0, and every seam the
+  plugin uses — the composer stats row, the per-turn markers, `session.loadThrough`, the
+  `turnOutline` projection — exists on both. 1.1.1's range would have excluded the npx
+  version the plugin is verified on.
+
 ## 1.1.1 — 2026-09-13
 
 Adapted to the 0.2.0 desktop, and the per-turn jump now reaches turns the conversation
