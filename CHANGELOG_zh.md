@@ -2,6 +2,12 @@
 
 每个发布版本一行。1.0.2 之前的版本仅用于开发，从未发布到 npm。
 
+## 1.1.4 —— 2026-10-18
+
+- 增强思考 Token 提取鲁棒性：全面兼容各大 Provider 及 API 字段（`reasoning_tokens`、`completion_tokens_details`、`output_tokens_details` 等）；当提供方 Usage 结构缺失推理字段时（如新版 Desktop DeepSeek 官方走 Anthropic Messages 协议），自动从会话流式分块（`reasoning-chunks`）中精确提取原生 Token 数，准确识别为「直接提供」而非退化为「文本推算」。
+- 升级投影版本（`STATE_VERSION: 3`），确保历史会话自动重新折叠为最新精准遥测数据。
+- 修复客户端样式热重载逻辑，已存在 `<style>` 标签时自动同步最新 CSS 样式规则。
+
 ## 1.1.3 —— 2026-10-18
 
 - 修复浮层背景透明度问题，严格对齐官方浮层材质规范：为详情面板（`.dsh-tstat-panel`）与说明卡片（`.dsh-tstat-why`）补充 `backdrop-filter: var(--dsw-menu-backdrop-filter)` 40px 背景毛玻璃虚化效果，并修正圆角为官方统一变量 `var(--dsw-radius-lg)`，彻底解决浮层背后文字直接透出的问题。

@@ -36,13 +36,16 @@ function settled(turn, step, options) {
   if (opts.cacheRead !== undefined) usage.cacheReadTokens = opts.cacheRead;
   if (opts.cacheWrite !== undefined) usage.cacheWriteTokens = opts.cacheWrite;
   if (opts.reasoning !== undefined) usage.reasoningTokens = opts.reasoning;
+  if (opts.usageOverrides !== undefined) Object.assign(usage, opts.usageOverrides);
   const source = opts.route === undefined ? undefined : { kind: "model", provider: opts.route.split("/")[0], model: opts.route.split("/")[1] };
-  return {
+  const event = {
     type: "assistant/message",
     seq: opts.seq === undefined ? turn * 10 + step : opts.seq,
     time: 0,
     data: { turn, step, usage, message: { id: "m" + turn + "-" + step, role: "assistant", content, source } },
   };
+  if (opts.stream !== undefined) event.data.stream = opts.stream;
+  return event;
 }
 
 /** A turn boundary, shaped as the log writes it. */
@@ -118,6 +121,35 @@ function fold(events, inheritedEventCount) {
   // A provider count still wins outright, whatever the text says.
   const reported = fold([settled(0, 1, { input: 1000, output: 400, reasoning: 250, reasoningChars: 4000, reasoningText: "好".repeat(4000) })]);
   assert(reported.view.totals.folded === 0 && reported.view.totals.reported === 250, "a reported count is never second-guessed");
+}
+
+// 3c. robust reasoning telemetry from other providers & stream deltas (e.g. DeepSeek on Anthropic Messages)
+{
+  // OpenAI snake_case
+  const snake = fold([settled(0, 1, { input: 1000, output: 400, usageOverrides: { reasoning_tokens: 150 }, reasoningChars: 500 })]);
+  assert(snake.view.totals.reported === 150 && snake.view.totals.folded === 0, "usage.reasoning_tokens is recognized");
+
+  // OpenAI completion_tokens_details
+  const details = fold([settled(0, 1, { input: 1000, output: 400, usageOverrides: { completion_tokens_details: { reasoning_tokens: 180 } }, reasoningChars: 500 })]);
+  assert(details.view.totals.reported === 180 && details.view.totals.folded === 0, "completion_tokens_details.reasoning_tokens is recognized");
+
+  // Anthropic output_tokens_details
+  const anthropicDetails = fold([settled(0, 1, { input: 1000, output: 400, usageOverrides: { output_tokens_details: { reasoning_tokens: 220 } }, reasoningChars: 500 })]);
+  assert(anthropicDetails.view.totals.reported === 220 && anthropicDetails.view.totals.folded === 0, "output_tokens_details.reasoning_tokens is recognized");
+
+  // Stream deltas when usage omits reasoning count (such as DeepSeek Anthropic Messages in Desktop)
+  const streamed = fold([settled(0, 1, {
+    input: 1000,
+    output: 179,
+    reasoningChars: 400, // would estimate ~100
+    stream: [
+      { type: "reasoning-chunks", texts: new Array(93).fill("t") },
+      { type: "text-chunks", texts: new Array(84).fill("x") },
+    ],
+  })]);
+  assert(streamed.view.totals.reported === 93, "stream reasoning-chunks length is counted as exact reported: " + streamed.view.totals.reported);
+  assert(streamed.view.totals.folded === 0, "and not folded as estimate");
+  assert(streamed.view.turns[0][1] === 93 && streamed.view.turns[0][2] === 93, "turn row reflects exact stream tokens");
 }
 
 // 4. the shares are measured against the turns that reasoned, never the whole session
