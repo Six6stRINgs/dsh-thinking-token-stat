@@ -3,6 +3,11 @@
 One line per released version. Versions before 1.0.2 were development-only and
 were never published to npm.
 
+## 1.1.3 — 2026-10-18
+
+- Fix panel translucency by strictly matching official DSH overlay material: added `backdrop-filter: var(--dsw-menu-backdrop-filter)` (40px background blur) and updated corner radius to `var(--dsw-radius-lg)` for `.dsh-tstat-panel` and `.dsh-tstat-why`, completely eliminating sharp text bleed-through from underneath.
+- Refined and streamlined user-facing English and Chinese documentation.
+
 ## 1.1.2 — 2026-09-29
 
 - The engine requirement is `dsh >= 0.1.7-rc.2`, not `>= 0.2.0-rc.2` as 1.1.1 declared:

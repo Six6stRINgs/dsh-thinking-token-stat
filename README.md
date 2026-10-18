@@ -10,305 +10,115 @@
 [![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
 [![GitHub stars](https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7)](https://github.com/Six6stRINgs/dsh-thinking-token-stat/)
 
-See the thinking-token total of a whole conversation, right in the statistics line
-under the message box. Open it for the share of the reasoning output, how many turns
-actually thought, and how much of the figure had to be worked out rather than reported.
-A second view breaks the figure down turn by turn, with the model each turn ran on.
+A lightweight thinking/reasoning token statistics plugin for DeepSeek Harness (DSH). Displays whole-session thinking token totals and ratios right in the composer dock, with official frosted-glass detail popovers and turn-by-turn model breakdowns.
 
-![the readout in the composer dock, with the session overview open](./assets/screenshot.png)
+![Composer dock readout and overview popover](./assets/screenshot.png)
 
-The statistics line under the message box, and the overview it opens: the session total,
-both shares, how many turns actually thought, how much of the figure was worked out
-rather than reported, and what the numbers cover.
+![Turn-by-turn details](./assets/screenshot-turns.png)
 
-![thinking by turn](./assets/screenshot-turns.png)
+## Features
 
-The turn-by-turn table: one row per turn with its thinking, everything that turn wrote,
-where that figure came from, the model that ran it, and the turn's share of its own
-output.
-
-## What you get
-
-One extra figure in the statistics line under the message box:
-
+### 1. Composer Dock Readout
+Always visible in the status line below the message input box:
 ```
 💭 37.2K · 70.7% · 4 / 6 turns
 ```
+- **Total Thinking Tokens**: The cumulative count of reasoning tokens across the entire conversation.
+- **Thinking / Output Ratio**: The proportion of thinking tokens relative to total reasoning output.
+- **Reasoning Turns**: Active thinking turns out of total turns (displayed when non-thinking turns exist).
 
-- **how many thinking tokens** the conversation used in total;
-- **what share of the output** those turns produced — of everything the model wrote
-  while thinking, how much of it was thinking;
-- **how many turns actually thought**, shown only when some turns did not, so the
-  line stays short otherwise.
+### 2. Session Overview Panel
+Clicking the dock readout opens the overview panel, fully styled according to DSH official popover design and frosted-glass vibrancy:
+- **Thinking / Reasoning Output**: Share of thinking tokens within reasoning-capable turns.
+- **Thinking / All Tokens**: Share of thinking tokens out of total billed session tokens (input + output + cache).
+- **Turn Counts**: Total turns vs. active reasoning turns.
+- **Estimate Transparency**: When a model does not report token counts, the estimated turn count and token volume are clearly broken out with a `?` explaining the formula.
+- **Scope Audit**: Statically proves what the figures cover (empty turns, fork-excluded prefixes, etc.).
 
-Click it for the details.
+### 3. Turn-by-Turn Breakdown
+Click "Detailed turn statistics" in the overview to open the per-turn table (newest turns first):
+- **Turn Number & Thinking Tokens**: Per-turn count (estimated figures prefixed with `~` and highlighted in business accent).
+- **Turn Total Output**: Total tokens written in that turn.
+- **Thinking Source**: Indicates whether the count was provider-reported, text-estimated, or mixed.
+- **Model Attribution**: Exact Provider and Model names (e.g. `deepseek-official/deepseek-reasoner`), tracking retries and model switches accurately.
+- **Output Share**: Percentage of the turn's output spent on reasoning.
+- **Quick Filtering**: Filter by Reported, Estimated, or None (collapsed by default).
+- **Jump to Reply**: Jump button on each row pages DSH history and navigates straight to the message.
 
-## Why there is no per-reply figure any more
+---
 
-DSH's own reply panel already reports a turn's reasoning tokens, and it says more
-about that turn besides. An earlier version of this plugin also showed a number next
-to every reply, which only repeated what was already one click away, so that figure
-has been **removed**.
+## Token Counting & Estimation
 
-What the reply panel cannot show is a number the model provider never reported.
-Rather than put a guess next to every reply, this plugin keeps that information where
-it belongs: in the session details, as one clearly-labelled line.
+Not all model providers report reasoning tokens via API usage metadata. To ensure accurate and meaningful statistics in every environment, the plugin employs a transparent hybrid strategy:
 
-## What the details show
+| Provider Response | Method | Display |
+| :--- | :--- | :--- |
+| **Reports reasoning tokens** | Uses exact provider count | Stated exactly; marked as `Reported` |
+| **Provides reasoning text only** | Multi-script density estimation | Prefixed with `~` (e.g. `~5.1K`); marked as `Estimated` |
+| **Provides neither** | Counted as non-thinking | Collapsed by default in the turn list |
 
+### Multi-Script Character Density Rules
+
+Estimating tokens using a flat 4 characters/token English heuristic undercounts dense scripts by 2–4×. This plugin segments text by script family:
+
+| Script | Characters / Token | Rationale |
+| :--- | :---: | :--- |
+| **CJK (Chinese, Japanese kana, Korean Hangul, fullwidth)** | **1** | Measured tokenizers range ~0.6–1.7 tokens/char (DeepSeek/Qwen tokenizers sit at 0.6–0.8). 1 char/token is conservative and avoids overestimating. |
+| **Cyrillic, Greek, Arabic, Hebrew, Indic, Thai, etc.** | **2.5** | Typically measured at 2–3 characters per token. |
+| **Latin, digits, punctuation, whitespace** | **4** | Standard empirical benchmark for English and Western prose. |
+
+All estimated numbers are explicitly prefixed with `~` and never misrepresented as exact provider telemetry.
+
+---
+
+## Architecture & Performance
+
+- **Durable Session Projection**:
+  - Folded incrementally on the host Node process as an event-driven Reducer over `assistant/message` settlements.
+  - Persisted as a session projection checkpoint (`<root>/session_projcache/sessions/<id>.json`), requiring only a few KB per session.
+  - Covers the complete session event log, immune to client-side window paging, virtual scrolling, or compaction.
+- **Zero Frontend Overhead**:
+  - The browser half simply reads a single projection value via `useProjection("thinkingStats")`. No message parsing, no background API requests, and no `localStorage` caching.
+- **Native DSH Alignment**:
+  - Strictly adheres to DSH `stat-dialog.module.css` specs, incorporating `var(--dsw-menu-backdrop-filter)` (40px blur) and `var(--dsw-radius-lg)` corner radius.
+  - Automatically adapts to Light and Dark themes.
+  - Matches the client UI language automatically (Chinese & English).
+
+---
+
+## Installation
+
+### Method 1: DSH Plugin Market (Recommended)
+Open the **Market** in DSH Desktop or Web GUI, search for `dsh-thinking-token-stat`, and click Install.
+
+### Method 2: Command Line
+Run in your terminal:
+```sh
+dsh plugin add dsh-thinking-token-stat
 ```
-Thinking tokens (session)                    37.2K tok
-──────────────────────────────────────────────────────
-Thinking / reasoning output (52.6K tok)         70.7%
-Thinking / all tokens (12.4M tok)                0.3%
-Reasoning turns                              4 / 6 turns
-Turns without a reported count     2 turns · ~5.1K tok
-                              Estimated ≈ 5.1K tok ?
-Scope: the whole session, 6 turns, of which 1 produced no reply. ?
-```
-
-| Line | Meaning |
-| --- | --- |
-| Thinking / reasoning output | of the output written while thinking, how much was thinking |
-| Thinking / all tokens | the same share measured against every token those turns were billed for |
-| Reasoning turns | how many turns thought, out of how many ran |
-| Turns without a reported count | how many turns needed a worked-out figure instead of a reported one, and how much of the total that accounts for |
-| Estimated … | the same worked-out share again, stated in words, with a `?` for the reason behind it |
-| Scope | what the numbers actually cover, computed rather than asserted: the turn count, any turn that produced no reply, a forked session's excluded history, and the per-turn list's own cap — each of which carries a `?` with its reason when it applies |
-
-Percentages use one decimal place; large counts are shortened, as in `24.8K`.
-
-**A figure that rests on the text fold carries a `~`** — `~37.2K`, `~70.7%` — on the
-line under the message box and everywhere in the details. The `?` beside the estimate
-opens a short message explaining why such a figure exists; it closes, like the details
-themselves, when you click anywhere else.
-
-At the bottom of the details, one line leads to the turn-by-turn view.
-
-## Turn by turn
-
-The turn-by-turn view lists one line per turn, newest first:
-
-| Column | Meaning |
-| --- | --- |
-| Turn | which turn it is |
-| Thinking | the thinking tokens for that turn, marked `~` and coloured as an estimate when it was worked out |
-| Output | everything that turn wrote — what the last column is a share of |
-| Thinking source | where the thinking figure came from: reported by the provider, worked out from the thinking text, or both |
-| Model | which model ran that turn |
-| Of output | that turn's thinking as a share of what it wrote, marked `~` when it was worked out |
-
-Three switches above the table choose what is listed: turns with a reported count,
-turns with a worked-out count, and turns with no thinking figure at all. The last
-group is off by default, because a turn that did not think is not interesting to see
-listed one by one — the switch shows how many are hidden.
-
-**Every turn the conversation started is listed, including the ones that failed.** A
-turn that errored or was interrupted never assembles a reply, so it has no tokens to
-report; it still appears, with `—` in every column and `None` as its source, because a
-table that silently skipped it would look as if the conversation had lost a turn. Those
-are the turns behind the `None` switch's count, and the overview's scope line names how
-many of them there are — with a `?` explaining that they produced no reply rather than
-no reasoning.
-
-**One page of 100 turns is rendered at a time.** A long conversation becomes a long
-table, and laying out a thousand rows to read ten of them is work nobody asked for, so
-only the page in view exists in the page: `Newer / Older` and `page 2 of 5` move
-between them.
-
-Every row ends with a jump button that takes you to that turn's reply in the
-conversation. A paged conversation only renders the turns it has loaded, so for a turn
-behind that window the button asks DSH to page history back to it first — the same call
-the official turn rail makes — and then lands on the reply.
-
-**The details close from anywhere.** Clicking another control in the composer, or
-anywhere outside, closes the overview and the table alike, as does `Escape` — the same
-behaviour as DSH's own statistics panel.
-
-### Where the numbers come from
-
-This plugin is two halves. The **host half** folds the session's event log once, turn by
-turn, and registers the result as a DSH **session projection** — the same mechanism the
-official statistics use. The **browser half** reads that one value and draws it.
-
-That is the whole design, and it is what makes the numbers trustworthy:
-
-- **The fold covers the entire log, not the window.** DSH keeps a conversation as a
-  window of recent turns and compaction rewrites that window, so anything counted from
-  what is on screen is local and unstable. A projection is folded from every committed
-  event, checkpointed with the session, and refolded only over the events that arrived
-  since — so the figures are whole-session by construction, on a conversation of any
-  length, and identical after a reload.
-- **The figures are never loaded or paged.** The plugin never reads a message back into
-  the conversation to count it. There is no "load more" for the numbers, because there is
-  nothing to load: the host already folded them. The one exception is the jump button,
-  which may ask DSH to page history to a turn you explicitly jumped to — a read, on
-  click, of a turn you asked to see.
-- **Nothing is cached by the browser.** There is no `localStorage`, no ledger, and no
-  per-session browser state. The projection's checkpoint is the persistence, and it
-  belongs to the session, not to this plugin.
-- **Every event that is not an assistant settlement is a no-op**, and the fold keeps six
-  numbers per turn plus a dictionary of model names. On a real 88-turn session it folds
-  8 988 events in about 5 ms in total, and stores 3 KB.
-
-If the host cannot provide the projection — an older DSH, a session that has not folded
-yet — the readout falls back to the official whole-session token projection and says so,
-rather than inventing per-turn numbers.
-
-#### What it costs in storage
-
-The fold's checkpoint is one row inside DSH's own projection cache
-(<code>&lt;root&gt;/session_projcache/sessions/&lt;sessionId&gt;.json</code>), beside the
-official units. A row is six numbers per turn plus a shared model dictionary, so size
-follows length, not content:
-
-| Turns | Persisted state | Published to the browser |
-| --- | --- | --- |
-| 88 (a real session measured here) | 3.0 KB | 2.4 KB |
-| 1 000 | ≈ 35 KB | capped at the newest 500 rows |
-| 5 000 (the state's own cap) | ≈ 175 KB | capped at the newest 500 rows |
-
-For comparison, DSH's own `turnOutline` unit keeps a larger per-turn record for the same
-session, and its `contextBreakdown` state is 54 KB. The published view is deliberately
-bounded: the host re-sends the whole value on every change, so the per-turn rows are
-capped at the newest 500 (≈15 KB) while the totals stay whole-session. Past that, the
-overview says so in one line.
-
-### Where the model column comes from
-
-Each settled assistant message names the provider and model that produced it, so the fold
-records that name on the turn it belongs to — once, in a dictionary, not once per row. A
-turn that ran on two models after a retry lists both. Nothing is asked of DSH's Trajectory
-view, and no second fold is created for it.
-
-
-## Where the numbers come from
-
-Whether a number is available depends on the model provider: some report a
-reasoning-token count, some send only the thinking text, and some send neither.
-
-| What the provider sends | What you see |
-| --- | --- |
-| A reasoning-token count | that count, exactly |
-| Only the thinking text | a number worked out from the text |
-| Neither | nothing — that reply counts as no thinking |
-
-**Why some figures have to be worked out.** Not every provider reports a
-reasoning-token count, and DSH cannot require one. If the thinking text were ignored
-whenever a count is missing, a whole class of models would appear to have thought
-nothing at all — even though the thinking is right there on screen. So the text is
-measured instead, **at a density that depends on the script** — a single English rule
-would under-count every other language by two to four times:
-
-| Script | Characters per token | Why |
-| --- | --- | --- |
-| Chinese, Japanese kana, Korean Hangul, fullwidth forms | 1 | these tokenize at roughly 0.6–1.7 tokens per character depending on the tokenizer, and DeepSeek's and Qwen's own tokenizers sit at the dense end (~0.6–0.8) |
-| Cyrillic, Greek, Arabic, Hebrew, Armenian, the Indic scripts, Thai, Georgian | 2.5 | better represented than CJK but still not English; measured tokenizer behaviour puts them at roughly 2–3 characters per token |
-| Latin letters, digits, punctuation, whitespace | 4 | the familiar English rule of thumb |
-
-The dense end is taken as 1 rather than 0.7 on purpose: for a Chinese-optimised model
-that reads slightly high, and a figure that reads slightly high is a better failure than
-one presented as a measurement while reading low.
-
-That is an estimate rather than a measurement, and it is treated as one: every figure
-that rests on it carries a `~`, the panel states how many turns needed it and how much
-of the total it accounts for, and the `?` beside it opens the rule itself.
-
-**What the split costs.** Two `replace` passes per reasoning block, and the fold stays
-the fastest thing in the plugin: measured over this session's 2.3 million characters of
-reasoning text, the per-script pricing adds 1.7 ms to a fold that takes 5 ms — about
-5 µs per settlement, paid once, by the host, on the way into a durable projection. It
-runs nowhere near the render path.
-
-**The shares only ever use the turns that actually thought.** That is deliberate: if
-you switch to a model that does not think, the older numbers do not start sliding
-down just because the conversation got longer. It also means "4 / 6 turns" tells you
-plainly how much of the conversation the figure describes.
-
-## What this plugin does and does not do
-
-**It does**: total up the thinking in a conversation and explain how that total was
-arrived at.
-
-**It does not**:
-
-- change the conversation, steer the model, or send anything anywhere — it reads the
-  session's own event log on the host and the projection DSH serves, and makes no
-  network requests;
-- display anything when the model did not think, or does not expose its thinking;
-- claim precision it does not have. A number the provider reported is exact; a number
-  worked out from the thinking text is an estimate, and the details label it as one;
-- count a window instead of a session. The figures are the session's, so paging and
-  compaction cannot change them;
-- read your history behind your back. The host folds the log it already has; the browser
-  never reads a message to count one. The only thing it can ask the host to load is the
-  turn you explicitly jumped to;
-- write anything into your browser. There is no local storage and no per-plugin state.
-
-## Lightweight by design
-
-- **One small figure.** Nothing is added next to individual replies.
-- **Folded once, by the host.** One reducer over one event type, six numbers per turn,
-  0.6 µs per event on a real session — and every other event costs a single reference
-  comparison.
-- **Nothing is loaded, paged, or cached.** The figures come from one projection value;
-  the browser half holds no session binding, opens no conversation, and stores nothing.
-  A jump may page history to the turn you asked for, once, on click.
-- **Read-only.** No background service, no extra requests, no network access.
-- **Nothing to configure.** No settings, no accounts, no data collection.
-- **Invisible when idle.** A conversation with no thinking shows nothing at all.
-- **Bounded.** The state keeps 5 000 rows (≈175 KB) and the published view 500 rows, and
-  the table renders one page of 100 at a time.
-- **Follows your theme**, light or dark.
-- **Follows your language.** The plugin is written in the two languages DSH ships,
-  Chinese and English, and follows `<html lang>` — anything else, including a third
-  language from a locale plugin, falls back to English.
-
-## Install
-
-From GitHub:
-
+*Or install the latest development branch from GitHub:*
 ```sh
 dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
 ```
 
-Or install the published npm package:
+After installation, refresh your browser or desktop window (`Ctrl+R`). The indicator appears automatically once the model begins thinking.
 
+---
+
+## Development
+
+The plugin consists of two self-contained modules:
+- `lib/index.js`: Host half; registers the `thinkingStats` session projection and fold logic.
+- `lib/client.js`: Client half; injects the readout, popover, and table into the composer dock slot.
+
+Run tests:
 ```sh
-npm install dsh-thinking-token-stat
+npm test
 ```
+(Executes `test/projection.mjs` for host fold semantics and `test/harness.mjs` for client UI rendering and degradation paths).
 
-Then restart `dsh web` and reload the page. The figure appears once the model starts
-thinking.
+---
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
-
-## Changelog
-
-One line per released version: [CHANGELOG.md](./CHANGELOG.md).
-
-## For developers
-
-Only if you intend to change the code. The plugin is two files with one job each:
-
-- **`lib/index.js`** — the host half. Registers one session projection (`thinkingStats`),
-  a pure `apply(state, event)` fold over `assistant/message` settlements. It carries its
-  own tiny `{ parse }` schemas so the package stays dependency-free, and it exports
-  `__testProjection` for the unit spec.
-- **`lib/client.js`** — the browser half. Registers one composer-dock entry, reads
-  `useProjection("thinkingStats")`, and draws the pill, the overview and the per-turn
-  table. It depends on the slot service and nothing else.
-
-`npm test` runs both suites with no browser and no host:
-
-- `node test/projection.mjs` drives the fold — provider-reported counts, text-derived
-  counts, retry replacement, fork inheritance, the reasoning-scoped denominators, both
-  caps, and the schema gate — and, with `DSH_TEST_LOG` set to a `session.v3.jsonl.zstd`,
-  re-folds a real recorded session and checks the totals against an independent pass over
-  the same events.
-- `node test/harness.mjs` renders the browser half against synthetic projection values:
-  the `~` marks, the `?` message, scope and cap notes, the columns, filters and paging,
-  the model dictionary, dismissal from either level, and the fallback for a host that
-  serves no per-turn projection.
+[MIT](./LICENSE)
