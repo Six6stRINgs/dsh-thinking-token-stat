@@ -1,18 +1,21 @@
 <div align="center">
-  <img src="./assets/icon.svg" width="88" height="88" alt="dsh-thinking-token-stat logo" />
+  <img src="./assets/icon.svg" width="128" height="128" alt="dsh-thinking-token-stat logo" />
 
-# dsh-thinking-token-stat
+  <h1>dsh-thinking-token-stat</h1>
 
-> [English](./README.md) | **中文**
+  <p><a href="./README.md">English</a> · <strong>简体中文</strong></p>
 
-[![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
-[![dsh](https://img.shields.io/badge/dsh-plugin-4B32C3)](https://github.com/deepseek-ai/deepseek-harness)
-[![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
-[![npm version](https://img.shields.io/npm/v/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
-[![npm downloads](https://img.shields.io/npm/dt/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
-[![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
-[![GitHub stars](https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7)](https://github.com/Six6stRINgs/dsh-thinking-token-stat/)
-
+  <p>
+    <a href="https://github.com/awesome-dsh-plugin/awesome-dsh-plugin"><img src="https://awesome-dsh-plugin.com/badge.svg" alt="awesome · DSH plugin" /></a>
+    <a href="https://github.com/deepseek-ai/deepseek-harness"><img src="https://img.shields.io/badge/dsh-plugin-4B32C3" alt="dsh" /></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="license" /></a>
+  </p>
+  <p>
+    <a href="https://www.npmjs.com/package/dsh-thinking-token-stat"><img src="https://img.shields.io/npm/v/dsh-thinking-token-stat?color=4a6cf7" alt="npm version" /></a>
+    <a href="https://www.npmjs.com/package/dsh-thinking-token-stat"><img src="https://img.shields.io/npm/dt/dsh-thinking-token-stat?color=4a6cf7" alt="npm downloads" /></a>
+    <a href="https://github.com/Six6stRINgs/dsh-thinking-token-stat"><img src="https://img.shields.io/badge/repo-github-181717?logo=github" alt="repo" /></a>
+    <a href="https://github.com/Six6stRINgs/dsh-thinking-token-stat/"><img src="https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7" alt="GitHub stars" /></a>
+  </p>
 </div>
 
 轻量级 DeepSeek Harness（DSH）会话思考 Token 统计插件。在输入框底栏常驻显示全会话思考 Token 总量与占比，支持展开与官方完全一致的毛玻璃详情面板及逐轮模型明细。
