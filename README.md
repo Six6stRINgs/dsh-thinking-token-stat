@@ -21,6 +21,28 @@ A lightweight thinking/reasoning token statistics plugin for DeepSeek Harness (D
 
 ![Turn-by-turn details](./assets/screenshot-turns.png)
 
+## Requirements & Installation
+
+- **DeepSeek Harness**: `>= 0.2.2-rc.3` (Desktop and Web)
+- **Node.js**: `>= 22.19.0`
+
+### Method 1: DSH Plugin Market (Recommended)
+Open the **Market** in DSH Desktop or Web GUI, search for `dsh-thinking-token-stat`, and click Install.
+
+### Method 2: Command Line
+Run in your terminal:
+```sh
+dsh plugin add dsh-thinking-token-stat
+```
+*Or install the latest development branch from GitHub:*
+```sh
+dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
+```
+
+After installation, refresh your browser or desktop window (`Ctrl+R`). The indicator appears automatically once the model begins thinking.
+
+---
+
 ## Features
 
 ### 1. Composer Dock Readout
@@ -88,28 +110,6 @@ All estimated numbers are explicitly prefixed with `~` and never misrepresented 
   - Strictly adheres to DSH `stat-dialog.module.css` specs, using CSS Anchor Positioning, `var(--dsw-menu-backdrop-filter)` (40px blur), and `var(--dsw-radius-lg)` corner radius.
   - Automatically adapts to Light and Dark themes.
   - Matches the client UI language automatically (Chinese & English).
-
----
-
-## Requirements & Installation
-
-- **DeepSeek Harness**: `>= 0.2.2-rc.3` (Desktop and Web)
-- **Node.js**: `>= 22.19.0`
-
-### Method 1: DSH Plugin Market (Recommended)
-Open the **Market** in DSH Desktop or Web GUI, search for `dsh-thinking-token-stat`, and click Install.
-
-### Method 2: Command Line
-Run in your terminal:
-```sh
-dsh plugin add dsh-thinking-token-stat
-```
-*Or install the latest development branch from GitHub:*
-```sh
-dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
-```
-
-After installation, refresh your browser or desktop window (`Ctrl+R`). The indicator appears automatically once the model begins thinking.
 
 ---
 

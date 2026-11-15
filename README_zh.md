@@ -21,6 +21,29 @@
 
 ![逐轮明细](./assets/screenshot-turns.png)
 
+
+## 环境要求与安装
+
+- **DeepSeek Harness**：`>= 0.2.2-rc.3`（支持桌面端 Desktop 与 Web 端）
+- **Node.js**：`>= 22.19.0`
+
+### 方式一：DSH 插件市场安装（推荐）
+在 DSH 桌面端或 Web 界面中打开 **插件市场（Market）**，搜索 `dsh-thinking-token-stat`，点击安装即可。
+
+### 方式二：命令行安装
+在终端中执行：
+```sh
+dsh plugin add dsh-thinking-token-stat
+```
+*或直接从 GitHub 安装最新主分支：*
+```sh
+dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
+```
+
+安装后刷新界面（或按 `Ctrl+R`）即可生效。模型开始输出思考过程后，底栏读数将自动显示。
+
+---
+
 ## 功能特性
 
 ### 1. 底栏读数（Composer Dock）
@@ -88,28 +111,6 @@
   - 严格遵循 DSH `stat-dialog.module.css` 规范，使用 CSS Anchor Positioning 锚点定位、`var(--dsw-menu-backdrop-filter)` 40px 高斯模糊与 `var(--dsw-radius-lg)` 圆角。
   - 自动适配深色（Dark）与浅色（Light）主题。
   - 界面语言自动同步 DSH 客户端语言环境（中英双语）。
-
----
-
-## 环境要求与安装
-
-- **DeepSeek Harness**：`>= 0.2.2-rc.3`（支持桌面端 Desktop 与 Web 端）
-- **Node.js**：`>= 22.19.0`
-
-### 方式一：DSH 插件市场安装（推荐）
-在 DSH 桌面端或 Web 界面中打开 **插件市场（Market）**，搜索 `dsh-thinking-token-stat`，点击安装即可。
-
-### 方式二：命令行安装
-在终端中执行：
-```sh
-dsh plugin add dsh-thinking-token-stat
-```
-*或直接从 GitHub 安装最新主分支：*
-```sh
-dsh plugin add github:Six6stRINgs/dsh-thinking-token-stat
-```
-
-安装后刷新界面（或按 `Ctrl+R`）即可生效。模型开始输出思考过程后，底栏读数将自动显示。
 
 ---
 
