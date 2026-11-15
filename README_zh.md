@@ -1,10 +1,7 @@
 <div align="center">
-  <img src="./assets/icon.svg" width="128" height="128" alt="dsh-thinking-token-stat logo" />
-
+  <img src="./assets/icon.svg" width="88" height="88" alt="dsh-thinking-token-stat logo" />
   <h1>dsh-thinking-token-stat</h1>
-
   <p><a href="./README.md">English</a> · <strong>简体中文</strong></p>
-
   <p>
     <a href="https://github.com/awesome-dsh-plugin/awesome-dsh-plugin"><img src="https://awesome-dsh-plugin.com/badge.svg" alt="awesome · DSH plugin" /></a>
     <a href="https://github.com/deepseek-ai/deepseek-harness"><img src="https://img.shields.io/badge/dsh-plugin-4B32C3" alt="dsh" /></a>
