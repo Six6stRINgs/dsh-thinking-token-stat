@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="./assets/icon.svg" width="88" height="88" alt="dsh-thinking-token-stat logo" />
 
 # dsh-thinking-token-stat
 

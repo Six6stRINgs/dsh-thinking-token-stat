@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="dts-title">
+  <title id="dts-title">Thinking token statistics</title>
+  <defs>
+    <linearGradient id="dts-bg" x1="8" y1="4" x2="56" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#223659"/>
+      <stop offset="1" stop-color="#0f1829"/>
+    </linearGradient>
+    <linearGradient id="dts-cloud" x1="15" y1="13" x2="45" y2="39" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0f6ff"/>
+      <stop offset="1" stop-color="#9dc0ff"/>
+    </linearGradient>
+    <linearGradient id="dts-card" x1="27" y1="27" x2="54" y2="51" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2b4c7e"/>
+      <stop offset="1" stop-color="#172c4d"/>
+    </linearGradient>
+    <linearGradient id="dts-bar" x1="0" y1="1" x2="0" y2="0">
+      <stop stop-color="#5b9bff"/>
+      <stop offset="1" stop-color="#cfe2ff"/>
+    </linearGradient>
+  </defs>
+  <rect x="3.5" y="3.5" width="57" height="57" rx="16" fill="url(#dts-bg)" stroke="#8cb6ff" stroke-opacity=".24"/>
+  <rect x="11" y="11" width="42" height="42" rx="9" fill="#9bc0ff" fill-opacity=".04" stroke="#9bc0ff" stroke-opacity=".16"/>
+  <path d="M22.5 36h18.5a6.5 6.5 0 0 0 .8-12.95 8.5 8.5 0 0 0-16.3-2.55A6.75 6.75 0 0 0 22.5 36Z" fill="url(#dts-cloud)"/>
+  <circle cx="17.5" cy="40.5" r="2.6" fill="#a8c7ff"/>
+  <circle cx="13.5" cy="45" r="1.6" fill="#8cb6ff" fill-opacity=".8"/>
+  <rect x="27" y="29" width="27" height="23" rx="6" fill="#060d19" fill-opacity=".48"/>
+  <rect x="27" y="27" width="27" height="23" rx="6" fill="url(#dts-card)" stroke="#bdd6ff" stroke-opacity=".45"/>
+  <rect x="32" y="39" width="3.5" height="6" rx="1.5" fill="#7cb1ff" fill-opacity=".75"/>
+  <rect x="38.75" y="34" width="3.5" height="11" rx="1.5" fill="url(#dts-bar)"/>
+  <rect x="45.5" y="31.5" width="3.5" height="13.5" rx="1.5" fill="#e6f0ff"/>
+</svg>
