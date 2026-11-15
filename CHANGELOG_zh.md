@@ -2,6 +2,14 @@
 
 每个发布版本一行。1.0.2 之前的版本仅用于开发，从未发布到 npm。
 
+## 1.1.5 —— 2026-11-15
+
+- 适配 DeepSeek Harness `0.2.2-rc.3`（桌面端与 Web 端），并将引擎版本要求更新为 `dsh >= 0.2.2-rc.3`：
+  - 将已移除的 `primitives.useAnchoredPosition` 替换为原生 CSS Anchor Positioning（`anchorName` / `positionAnchor` / `@position-try`），严格对齐官方 `stat-dialog.module.css` 的视口边界与自动避让规则（同时保留对旧版宿主 `useAnchoredPosition` 的可选回退）。
+  - 适配新版拆分后的 `conversation.composer.dock` 独立条目布局（`order: 2`、对齐官方 `var(--dsw-radius-sm)` 圆角与次级胶囊字号）。
+  - 兼容新版 `primitives` 图标导出命名（`IconThinkOutlineRegular`、`IconChevronRightOutlineRegular`、`IconChevronLeftOutlineRegular`、`IconRightUpOutlineRegular`），并保留旧图标名与内置 SVG 回退。
+  - 补充捕获阶段的外部 `click` 关闭监听（与 `pointerdown`、`Escape` 协同），确保通过键盘激活底栏其他统计控件时面板能正常收起。
+
 ## 1.1.4 —— 2026-10-18
 
 - 增强思考 Token 提取鲁棒性：全面兼容各大 Provider 及 API 字段（`reasoning_tokens`、`completion_tokens_details`、`output_tokens_details` 等）；当提供方 Usage 结构缺失推理字段时（如新版 Desktop DeepSeek 官方走 Anthropic Messages 协议），自动从会话流式分块（`reasoning-chunks`）中精确提取原生 Token 数，准确识别为「直接提供」而非退化为「文本推算」。

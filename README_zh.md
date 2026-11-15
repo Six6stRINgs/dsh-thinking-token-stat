@@ -1,3 +1,5 @@
+<div align="center">
+
 # dsh-thinking-token-stat
 
 > [English](./README.md) | **中文**
@@ -9,6 +11,8 @@
 [![npm downloads](https://img.shields.io/npm/dt/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
 [![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
 [![GitHub stars](https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7)](https://github.com/Six6stRINgs/dsh-thinking-token-stat/)
+
+</div>
 
 轻量级 DeepSeek Harness（DSH）会话思考 Token 统计插件。在输入框底栏常驻显示全会话思考 Token 总量与占比，支持展开与官方完全一致的毛玻璃详情面板及逐轮模型明细。
 
@@ -80,13 +84,16 @@
 - **前端零额外开销**：
   - 浏览器端仅订阅单个投影值渲染 UI，不扫描历史消息、不发起额外网络请求、不写入 `localStorage`。
 - **对齐官方 UI 规范**：
-  - 严格遵循 DSH `stat-dialog.module.css` 规范，应用 `var(--dsw-menu-backdrop-filter)` 40px 高斯模糊与 `var(--dsw-radius-lg)` 圆角。
+  - 严格遵循 DSH `stat-dialog.module.css` 规范，使用 CSS Anchor Positioning 锚点定位、`var(--dsw-menu-backdrop-filter)` 40px 高斯模糊与 `var(--dsw-radius-lg)` 圆角。
   - 自动适配深色（Dark）与浅色（Light）主题。
   - 界面语言自动同步 DSH 客户端语言环境（中英双语）。
 
 ---
 
-## 安装与使用
+## 环境要求与安装
+
+- **DeepSeek Harness**：`>= 0.2.2-rc.3`（支持桌面端 Desktop 与 Web 端）
+- **Node.js**：`>= 22.19.0`
 
 ### 方式一：DSH 插件市场安装（推荐）
 在 DSH 桌面端或 Web 界面中打开 **插件市场（Market）**，搜索 `dsh-thinking-token-stat`，点击安装即可。

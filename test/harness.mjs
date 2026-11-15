@@ -43,15 +43,14 @@ const react = {
   useLayoutEffect: (fn) => { fn(); },
   createElement: (type, props, ...children) => ({ type, props: props || {}, children }),
 };
-const ThinkIconMock = (props) => ({ type: "IconThinkOutline16", props });
+const ThinkIconMock = (props) => ({ type: "IconThinkOutlineRegular", props });
 const portals = [];
 
 const requireMock = {
   react,
   "react-dom": { createPortal: (node, container) => { portals.push({ node, container }); return node; } },
   "@deepseek-ai/dsh-client-ui-primitives": {
-    IconThinkOutline16: ThinkIconMock,
-    useAnchoredPosition: () => null,
+    IconThinkOutlineRegular: ThinkIconMock,
   },
 };
 
@@ -885,6 +884,61 @@ const L = {
     );
   }
   documentStub.documentElement.lang = saved;
+}
+
+// 19. DSH 0.2.2+ CSS Anchor Positioning and legacy useAnchoredPosition fallback
+{
+  const projections = PROJECTIONS(viewOf([reportedRow(0, 300, 500, 0)], ["a/one"]));
+  const el = mountTracked(projections);
+  const panel = panelOf(el);
+  assert(el.props.style && typeof el.props.style.anchorName === "string" && el.props.style.anchorName.startsWith("--dsh-tstat-"),
+    "the dock anchor sets a CSS anchor-name, got: " + JSON.stringify(el.props.style));
+  assert(panel !== null && panel.props["data-anchored"] === "css", "the panel marks CSS anchoring");
+  assert(panel.props.style && panel.props.style.positionAnchor === el.props.style.anchorName,
+    "the panel points position-anchor at the dock anchor");
+
+  // Capture-phase click also closes the dialog (e.g. keyboard activation of another dock control).
+  const listeners = { pointerdown: [], click: [], keydown: [] };
+  const savedAdd = documentStub.addEventListener;
+  const savedRemove = documentStub.removeEventListener;
+  documentStub.addEventListener = (type, handler) => { if (listeners[type] !== undefined) listeners[type].push(handler); };
+  documentStub.removeEventListener = (type, handler) => {
+    if (listeners[type] !== undefined) listeners[type] = listeners[type].filter((entry) => entry !== handler);
+  };
+  mountTracked(projections);
+  assert(listeners.click.length > 0, "an outside-click listener is installed while open");
+  for (const handler of [...listeners.click]) handler({ target: {} });
+  assert(panelOf(rerender()) === null, "a click anywhere else closes the dialog");
+  documentStub.addEventListener = savedAdd;
+  documentStub.removeEventListener = savedRemove;
+
+  // Legacy host providing primitives.useAnchoredPosition still uses JS positioning.
+  let legacyCaptured = null;
+  const legacyWindow = {
+    __ModuleLoader__: { load: (obj) => { legacyCaptured = obj; } },
+    get innerWidth() { return layout.viewport.width; },
+    get innerHeight() { return layout.viewport.height; }
+  };
+  const legacyRequire = (spec) => spec === "@deepseek-ai/dsh-client-ui-primitives"
+    ? { IconThinkOutline16: ThinkIconMock, useAnchoredPosition: () => ({ left: 42, top: 84 }) }
+    : requireMock[spec];
+  new Function("window", "document", "require", SRC)(legacyWindow, documentStub, legacyRequire);
+  const legacyMod = legacyCaptured.factory(legacyRequire);
+  const legacyRegs = [];
+  legacyMod.apply({
+    sessions: sessionService,
+    slots: { inject: (n, cb) => cb(), register: (opts, component) => { legacyRegs.push({ opts, component }); } },
+  });
+  resetCells();
+  seedView = "summary";
+  const legacyProps = { useProjection: (key) => projections[key] };
+  render(legacyRegs[0].component(legacyProps));
+  cursor = 0;
+  const legacyEl = render(legacyRegs[0].component(legacyProps));
+  const legacyPanel = panelOf(legacyEl);
+  assert(legacyEl.props.style === undefined, "legacy host does not set CSS anchorName");
+  assert(legacyPanel.props["data-anchored"] === undefined && legacyPanel.props.style.left === 42 && legacyPanel.props.style.top === 84,
+    "legacy host preserves useAnchoredPosition placement");
 }
 
 console.log(`All ${pass} assertions passed.`);

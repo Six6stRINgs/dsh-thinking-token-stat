@@ -1,3 +1,5 @@
+<div align="center">
+
 # dsh-thinking-token-stat
 
 > **English** | [中文](./README_zh.md)
@@ -9,6 +11,8 @@
 [![npm downloads](https://img.shields.io/npm/dt/dsh-thinking-token-stat?color=4a6cf7)](https://www.npmjs.com/package/dsh-thinking-token-stat)
 [![repo](https://img.shields.io/badge/repo-github-181717?logo=github)](https://github.com/Six6stRINgs/dsh-thinking-token-stat)
 [![GitHub stars](https://img.shields.io/github/stars/Six6stRINgs/dsh-thinking-token-stat?color=4a6cf7)](https://github.com/Six6stRINgs/dsh-thinking-token-stat/)
+
+</div>
 
 A lightweight thinking/reasoning token statistics plugin for DeepSeek Harness (DSH). Displays whole-session thinking token totals and ratios right in the composer dock, with official frosted-glass detail popovers and turn-by-turn model breakdowns.
 
@@ -36,7 +40,7 @@ Clicking the dock readout opens the overview panel, fully styled according to DS
 - **Scope Audit**: Statically proves what the figures cover (empty turns, fork-excluded prefixes, etc.).
 
 ### 3. Turn-by-Turn Breakdown
-Click "Detailed turn statistics" in the overview to open the per-turn table (newest turns first):
+Click "Per-turn detail" in the overview to open the per-turn table (newest turns first):
 - **Turn Number & Thinking Tokens**: Per-turn count (estimated figures prefixed with `~` and highlighted in business accent).
 - **Turn Total Output**: Total tokens written in that turn.
 - **Thinking Source**: Indicates whether the count was provider-reported, text-estimated, or mixed.
@@ -80,13 +84,16 @@ All estimated numbers are explicitly prefixed with `~` and never misrepresented 
 - **Zero Frontend Overhead**:
   - The browser half simply reads a single projection value via `useProjection("thinkingStats")`. No message parsing, no background API requests, and no `localStorage` caching.
 - **Native DSH Alignment**:
-  - Strictly adheres to DSH `stat-dialog.module.css` specs, incorporating `var(--dsw-menu-backdrop-filter)` (40px blur) and `var(--dsw-radius-lg)` corner radius.
+  - Strictly adheres to DSH `stat-dialog.module.css` specs, using CSS Anchor Positioning, `var(--dsw-menu-backdrop-filter)` (40px blur), and `var(--dsw-radius-lg)` corner radius.
   - Automatically adapts to Light and Dark themes.
   - Matches the client UI language automatically (Chinese & English).
 
 ---
 
-## Installation
+## Requirements & Installation
+
+- **DeepSeek Harness**: `>= 0.2.2-rc.3` (Desktop and Web)
+- **Node.js**: `>= 22.19.0`
 
 ### Method 1: DSH Plugin Market (Recommended)
 Open the **Market** in DSH Desktop or Web GUI, search for `dsh-thinking-token-stat`, and click Install.

@@ -3,6 +3,14 @@
 One line per released version. Versions before 1.0.2 were development-only and
 were never published to npm.
 
+## 1.1.5 — 2026-11-15
+
+- Adapted to DeepSeek Harness `0.2.2-rc.3` (Desktop and Web) and updated the engine requirement to `dsh >= 0.2.2-rc.3`:
+  - Replaced the removed `primitives.useAnchoredPosition` hook with native CSS Anchor Positioning (`anchorName` / `positionAnchor` / `@position-try`), matching DSH's `stat-dialog.module.css` layout-viewport bounds and fallback placement (while keeping an optional fallback if an older host exposes `useAnchoredPosition`).
+  - Adapted to the split `conversation.composer.dock` pill architecture (`order: 2`, `var(--dsw-radius-sm)` corner radius, secondary pill sizing) after `[data-composer-stats]` was replaced by individual dock entries.
+  - Added support for the updated `primitives` icon exports (`IconThinkOutlineRegular`, `IconChevronRightOutlineRegular`, `IconChevronLeftOutlineRegular`, `IconRightUpOutlineRegular`) while preserving legacy icon names and inline SVG fallbacks.
+  - Added capture-phase outside-click dismissal alongside `pointerdown` and `Escape` so keyboard activation of sibling dock controls closes the popover cleanly.
+
 ## 1.1.4 — 2026-10-18
 
 - Enhance reasoning token extraction robustness: supports various provider and API formats (`reasoning_tokens`, `completion_tokens_details`, `output_tokens_details`, etc.), and seamlessly falls back to session stream deltas (`reasoning-chunks`) when the provider adapter (such as DeepSeek on Anthropic Messages in new Desktop builds) omits the telemetry field, capturing exact reported token counts instead of falling back to text estimation.
